@@ -1,4 +1,21 @@
-".vs/" 
-"bin/" 
-"obj/" 
-"node_modules/" 
+# Ignore Visual Studio files
+.vs/
+
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore Node.js modules
+node_modules/
+
+# Ignore other common temporary files
+*.log
+*.vsix
+*.user
+*.rsuser
+*.suo
+*.cache
+*.pdb
+*.mdb
+*.csproj.user
+*.vscode/
