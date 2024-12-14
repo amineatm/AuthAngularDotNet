@@ -1,5 +1,6 @@
 using AuthECApi.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,13 +12,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Service from Identity Core
-builder.Services.AddIdentityApiEndpoints<AppUser>()
+// Services from Identity Core.
+builder.Services
+    .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-// Add DbContext
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.User.RequireUniqueEmail = true;
+});
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -28,12 +37,43 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+#region Config. CORS
+app.UseCors(options =>
+    options.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+#endregion
 
 app.UseAuthorization();
 
-app.UseRouting();
+app.MapControllers();
 
-app.MapGroup("/api").MapIdentityApi<AppUser>();
+app
+    .MapGroup("/api")
+    .MapIdentityApi<AppUser>();
+
+
+
+app.MapPost("/api/signup", async (
+    UserManager<AppUser> userManager,
+    [FromBody] UserRegistrationModel userRegistrationModel
+    ) =>
+{
+    AppUser user = new AppUser()
+    {
+        UserName = userRegistrationModel.Email,
+        Email = userRegistrationModel.Email,
+        FullName = userRegistrationModel.FullName,
+    };
+    var result = await userManager.CreateAsync(
+        user,
+        userRegistrationModel.Password);
+
+    if (result.Succeeded)
+        return Results.Ok(result);
+    else
+        return Results.BadRequest(result);
+});
 
 app.Run();
+
