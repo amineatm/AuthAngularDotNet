@@ -6,6 +6,15 @@
       placeholder="Full Name"
       formControlName="fullName"
     />
+    <div
+      class="error-feedback"
+      *ngIf="
+        hasDisplayableErrors('fullName') &&
+        form.controls['fullName'].hasError('required')
+      "
+    >
+      Please enter your full name
+    </div>
   </div>
   <div class="mb-3">
     <input
