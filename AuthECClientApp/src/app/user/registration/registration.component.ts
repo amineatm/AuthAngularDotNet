@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
 import { AuthService } from '../../shared/services/auth.service';
-import { Toast, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
@@ -56,9 +56,9 @@ export class RegistrationComponent {
   onSubmit() {
     this.isSubmitted = true;
     if (this.form.valid) {
-      this.service.createUser(this.form).subscribe({
+      this.service.createUser(this.form.value).subscribe({
         next: (res: any) => {
-          if (res.succeded) {
+          if (res.succeeded) {
             this.form.reset();
             this.isSubmitted = false;
             this.toastr.success(
@@ -68,7 +68,29 @@ export class RegistrationComponent {
           }
         },
         error: (err) => {
-          console.log(err);
+          if (err.error.errors)
+            err.error.errors.forEach((x: any) => {
+              switch (x.code) {
+                case 'DuplicateUserName':
+                  break;
+
+                case 'DuplicateEmail':
+                  this.toastr.error(
+                    'Email is already taken.',
+                    'Registration Failed'
+                  );
+                  break;
+
+                default:
+                  this.toastr.error(
+                    'Contact the developer',
+                    'Registration Failed'
+                  );
+                  console.log(x);
+                  break;
+              }
+            });
+          else console.log('error:', err);
         },
       });
     }
@@ -78,7 +100,7 @@ export class RegistrationComponent {
     const control = this.form.get(controlName);
     return (
       Boolean(control?.invalid) &&
-      (this.isSubmitted || Boolean(control?.touched))
+      (this.isSubmitted || Boolean(control?.touched) || Boolean(control?.dirty))
     );
   }
 }
