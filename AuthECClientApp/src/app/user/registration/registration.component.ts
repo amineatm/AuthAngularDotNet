@@ -7,15 +7,22 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
+import { AuthService } from '../../shared/services/auth.service';
+import { Toast, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FirstKeyPipe],
   templateUrl: './registration.component.html',
   styles: ``,
 })
 export class RegistrationComponent {
-  constructor(public formBuilder: FormBuilder) {}
+  constructor(
+    public formBuilder: FormBuilder,
+    private service: AuthService,
+    private toastr: ToastrService
+  ) {}
   isSubmitted: boolean = false;
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null => {
@@ -48,7 +55,23 @@ export class RegistrationComponent {
 
   onSubmit() {
     this.isSubmitted = true;
-    console.log(this.form.value);
+    if (this.form.valid) {
+      this.service.createUser(this.form).subscribe({
+        next: (res: any) => {
+          if (res.succeded) {
+            this.form.reset();
+            this.isSubmitted = false;
+            this.toastr.success(
+              'New user was added!',
+              'Successful registration!'
+            );
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
   }
 
   hasDisplayableErrors(controlName: string): boolean {
