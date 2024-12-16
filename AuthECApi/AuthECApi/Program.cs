@@ -1,4 +1,5 @@
 using AuthECApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,12 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme =
+    x.DefaultChallengeScheme =
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+});
 
 
 var app = builder.Build();
