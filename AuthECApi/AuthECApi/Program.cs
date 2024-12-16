@@ -28,6 +28,9 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAuthentication();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,14 +48,14 @@ app.UseCors(options =>
 #endregion
 
 app.UseAuthorization();
+app.UseAuthentication();
+
 
 app.MapControllers();
 
 app
     .MapGroup("/api")
     .MapIdentityApi<AppUser>();
-
-
 
 app.MapPost("/api/signup", async (
     UserManager<AppUser> userManager,
