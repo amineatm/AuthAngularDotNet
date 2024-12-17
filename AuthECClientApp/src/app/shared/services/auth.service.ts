@@ -14,4 +14,8 @@ export class AuthService {
   signin(formData: any) {
     return this.http.post(this.baseUrl + 'signin', formData);
   }
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('token'); // Example: Adjust based on your implementation
+  }
+
 }
