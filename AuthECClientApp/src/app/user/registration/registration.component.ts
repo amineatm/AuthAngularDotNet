@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -18,13 +18,18 @@ import { Router, RouterLink } from '@angular/router';
   templateUrl: './registration.component.html',
   styles: ``,
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     private service: AuthService,
     private toastr: ToastrService,
     private router: Router
   ) {}
+  ngOnInit(): void {
+    if (this.service.isLoggedIn()) {
+      this.router.navigateByUrl('/dashboard');
+    }
+  }
   isSubmitted: boolean = false;
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null => {
@@ -68,7 +73,6 @@ export class RegistrationComponent {
               'Successful registration!'
             );
             this.router.navigateByUrl('/login');
-
           }
         },
         error: (err) => {
