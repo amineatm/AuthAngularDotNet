@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RegistrationComponent } from './registration/registration.component';
 import { ChildrenOutletContexts, RouterOutlet } from '@angular/router';
 import {
   trigger,
@@ -11,7 +10,7 @@ import {
 
 @Component({
   selector: 'app-user',
-  imports: [RouterOutlet, RegistrationComponent],
+  imports: [RouterOutlet],
   templateUrl: './user.component.html',
   styles: ``,
   animations: [
