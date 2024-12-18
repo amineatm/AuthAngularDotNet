@@ -30,20 +30,19 @@ public static class IdentityExtensions
     //Add Authentication and authorization
     public static IServiceCollection AddIdentityAuth(this IServiceCollection services, IConfiguration config)
     {
-        services.AddAuthentication(x =>
-        {
-            x.DefaultAuthenticateScheme =
-            x.DefaultChallengeScheme =
-            x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(y =>
-        {
-            y.SaveToken = false;
-            y.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["AppSettings:JWTSecret"]!))
-            };
-        });
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(y =>
+                {
+                    y.SaveToken = false;
+                    y.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["AppSettings:JWTSecret"]!)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                });
         return services;
     }
     public static WebApplication AddIdentityAuthMiddlware(this WebApplication app)
