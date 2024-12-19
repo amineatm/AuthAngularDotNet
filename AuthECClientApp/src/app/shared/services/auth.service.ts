@@ -8,7 +8,6 @@ import { environment } from '../../../environments/environment';
 })
 export class AuthService {
   constructor(private http: HttpClient) {}
-
   createUser(formData: any) {
     return this.http.post(environment.apiBaseUrl + 'signup', formData);
   }
@@ -21,9 +20,8 @@ export class AuthService {
   saveToken(token: string) {
     localStorage.setItem(TOKEN_KEY, token);
   }
-
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(TOKEN_KEY); // Example: Adjust based on your implementation
+    return !!localStorage.getItem(TOKEN_KEY);
   }
   isLoggedIn() {
     return this.getToken() != null ? true : false;

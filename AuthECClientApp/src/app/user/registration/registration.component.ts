@@ -11,6 +11,7 @@ import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
 import { AuthService } from '../../shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -19,16 +20,25 @@ import { Router, RouterLink } from '@angular/router';
   styles: ``,
 })
 export class RegistrationComponent implements OnInit {
+  roles: string[] = [];
   constructor(
     public formBuilder: FormBuilder,
     private service: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
   ngOnInit(): void {
     if (this.service.isLoggedIn()) {
       this.router.navigateByUrl('/dashboard');
     }
+
+    this.userService.getUserRoles().subscribe({
+      next: (res: any) => {
+        this.roles = res;
+      },
+      error: (err) => console.error('Failed to fetch roles:', err),
+    });
   }
   isSubmitted: boolean = false;
 
@@ -56,6 +66,9 @@ export class RegistrationComponent implements OnInit {
         ],
       ],
       confirmPassword: [''],
+      role: ['', Validators.required],
+      gender: ['', Validators.required],
+      age: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
     },
     { validators: this.passwordMatchValidator }
   );

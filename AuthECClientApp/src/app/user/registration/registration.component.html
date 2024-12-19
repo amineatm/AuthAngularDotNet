@@ -44,6 +44,52 @@
   <div class="mb-3">
     <input
       class="form-control bg-body-secondary"
+      placeholder="Age"
+      formControlName="age"
+      type="number"
+    />
+    <div class="error-feedback" *ngIf="hasDisplayableErrors('age')">
+      <div *ngIf="form.controls.age.hasError('required')">
+        Please enter your age.
+      </div>
+      <div *ngIf="form.controls.age.hasError('pattern')">
+        Please enter a valid age.
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <select class="form-control bg-body-secondary" formControlName="role">
+      <option value="" disabled selected>Select a role</option>
+      <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+    </select>
+    <div
+      class="error-feedback"
+      *ngIf="
+        hasDisplayableErrors('role') && form.controls.role.hasError('required')
+      "
+    >
+      Please select a role.
+    </div>
+  </div>
+  <div class="mb-3">
+    <select class="form-control bg-body-secondary" formControlName="gender">
+      <option value="" disabled selected>Select a gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+    <div
+      class="error-feedback"
+      *ngIf="
+        hasDisplayableErrors('gender') &&
+        form.controls.gender.hasError('required')
+      "
+    >
+      Please select a gender.
+    </div>
+  </div>
+  <div class="mb-3">
+    <input
+      class="form-control bg-body-secondary"
       placeholder="Password"
       formControlName="password"
     />

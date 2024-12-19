@@ -12,4 +12,7 @@ export class UserService {
   getUserProfile() {
     return this.http.get(environment.apiBaseUrl + 'userProfile');
   }
+  getUserRoles() {
+    return this.http.get(environment.apiBaseUrl + 'UserRoles');
+  }
 }
