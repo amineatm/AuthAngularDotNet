@@ -16,13 +16,13 @@ export class LoginComponent implements OnInit {
   isSubmitted: boolean = false;
   constructor(
     public formBuilder: FormBuilder,
-    private service: AuthService,
+    private authService: AuthService,
     private toastr: ToastrService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    if (this.service.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.router.navigateByUrl('/dashboard');
     }
   }
@@ -43,9 +43,9 @@ export class LoginComponent implements OnInit {
     this.isSubmitted = true;
 
     if (this.form.valid) {
-      this.service.signin(this.form.value).subscribe({
+      this.authService.signin(this.form.value).subscribe({
         next: (res: any) => {
-          this.service.saveToken(res.token);
+          this.authService.saveToken(res.token);
           this.router.navigateByUrl('/dashboard');
         },
         error: (err) => {
