@@ -1,6 +1,7 @@
 using AuthECApi.Controllers;
 using AuthECApi.Extensions;
 using AuthECApi.Models;
+using AuthECAPI.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -29,6 +30,6 @@ app.MapGroup("/api")
 app.MapGroup("/api")
     .MapIdentityUserEndpoint();
 app.MapGroup("/api")
-.MapAccountEndpoint();
+.MapAccountEndpoints();
 
 app.Run();
