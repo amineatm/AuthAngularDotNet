@@ -49,13 +49,25 @@ namespace AuthECApi.Controllers
             var user = await userManager.FindByEmailAsync(userRegistrationModel.Email);
             if (user != null && await userManager.CheckPasswordAsync(user, userRegistrationModel.Password))
             {
+                var role = await userManager.GetRolesAsync(user);
                 var SigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Value.JWTSecret));
+
+                ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
+                {
+                        new Claim("UserID", user.Id.ToString()),
+                        new Claim("Gender", user.Gender.ToString()),
+                        new Claim("Age", (DateTime.Now.Year - user.DOB.Year).ToString()),
+                        new Claim(ClaimTypes.Role, role.First()),
+                });
+
+                if (user.LibraryID != null)
+                {
+                    claims.AddClaim(new Claim("LibraryID", user.LibraryID.ToString()!));
+                }
+
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim("UserID", user.Id.ToString())
-                    }),
+                    Subject = claims,
                     Expires = DateTime.UtcNow.AddMinutes(10),
                     SigningCredentials = new SigningCredentials(
                         SigningKey, SecurityAlgorithms.HmacSha256Signature)

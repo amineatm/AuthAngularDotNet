@@ -1,6 +1,7 @@
 ﻿using AuthECApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace AuthECAPI.Controllers
@@ -10,7 +11,15 @@ namespace AuthECAPI.Controllers
         public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapGet("/UserProfile", GetUserProfile);
+            app.MapGet("/UserRoles", GetUserRoles);
             return app;
+        }
+
+        [AllowAnonymous]
+        private static async Task<IResult> GetUserRoles(AppDbContext dbContext)
+        {
+            var roleList = await dbContext.Roles.Select(x => x.Name).ToListAsync();
+            return Results.Ok(roleList);
         }
 
         [Authorize]
