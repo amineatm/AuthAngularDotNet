@@ -18,7 +18,7 @@ namespace AuthECAPI.Controllers
           ClaimsPrincipal user,
           UserManager<AppUser> userManager)
         {
-            string userID = user.Claims.First(x => x.Type == "userID").Value;
+            var userID = user.Claims.First(x => x.Type == "UserID").Value;
             var userDetails = await userManager.FindByIdAsync(userID);
             return Results.Ok(
               new

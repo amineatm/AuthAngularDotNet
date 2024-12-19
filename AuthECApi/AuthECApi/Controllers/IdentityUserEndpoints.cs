@@ -1,4 +1,5 @@
 ﻿using AuthECApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,6 +20,8 @@ namespace AuthECApi.Controllers
 
             return app;
         }
+
+        [AllowAnonymous]
         private static async Task<IResult> CreateUser(UserManager<AppUser> userManager, [FromBody] UserRegistrationModel userRegistrationModel)
         {
             AppUser user = new AppUser()
@@ -34,6 +37,8 @@ namespace AuthECApi.Controllers
             else
                 return Results.BadRequest(result);
         }
+
+        [AllowAnonymous]
         private static async Task<IResult> SignIn(UserManager<AppUser> userManager, [FromBody] UserLoginModel userRegistrationModel, IOptions<AppSettings> appSettings)
         {
             var user = await userManager.FindByEmailAsync(userRegistrationModel.Email);
@@ -44,7 +49,7 @@ namespace AuthECApi.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("userID", user.Id.ToString())
+                        new Claim("UserID", user.Id.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(10),
                     SigningCredentials = new SigningCredentials(
