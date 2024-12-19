@@ -43,6 +43,8 @@ public static class IdentityExtensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["AppSettings:JWTSecret"]!)),
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
                     };
                 });
         services.AddAuthorization(options =>
@@ -52,9 +54,9 @@ public static class IdentityExtensions
                    .RequireAuthenticatedUser()
                    .Build();
 
-            options.AddPolicy("HasLibraryID", policy => policy.RequireClaim("LibraryID"));
-            options.AddPolicy("IsFemale", policy => policy.RequireClaim("Gender", "Female"));
-            options.AddPolicy("Under10", policy => policy.RequireAssertion(context => int.Parse(context.User.Claims.First(x => x.Type == "Age").Value) < 10));
+            options.AddPolicy("HasLibraryID", policy => policy.RequireClaim("libraryID"));
+            options.AddPolicy("IsFemale", policy => policy.RequireClaim("gender", "Female"));
+            options.AddPolicy("Under10", policy => policy.RequireAssertion(context => int.Parse(context.User.Claims.First(x => x.Type == "age").Value) < 10));
         });
 
         return services;

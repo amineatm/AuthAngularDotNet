@@ -54,21 +54,21 @@ namespace AuthECApi.Controllers
 
                 ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
                 {
-                        new Claim("UserID", user.Id.ToString()),
-                        new Claim("Gender", user.Gender.ToString()),
-                        new Claim("Age", (DateTime.Now.Year - user.DOB.Year).ToString()),
+                        new Claim("userID", user.Id.ToString()),
+                        new Claim("gender", user.Gender.ToString()),
+                        new Claim("age", (DateTime.Now.Year - user.DOB.Year).ToString()),
                         new Claim(ClaimTypes.Role, role.First()),
                 });
 
                 if (user.LibraryID != null)
                 {
-                    claims.AddClaim(new Claim("LibraryID", user.LibraryID.ToString()!));
+                    claims.AddClaim(new Claim("libraryID", user.LibraryID.ToString()!));
                 }
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = claims,
-                    Expires = DateTime.UtcNow.AddMinutes(10),
+                    Expires = DateTime.UtcNow.AddMinutes(1),
                     SigningCredentials = new SigningCredentials(
                         SigningKey, SecurityAlgorithms.HmacSha256Signature)
                 };
