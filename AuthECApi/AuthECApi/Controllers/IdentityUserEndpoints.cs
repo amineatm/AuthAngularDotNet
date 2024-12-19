@@ -10,7 +10,7 @@ using System.Text;
 
 namespace AuthECApi.Controllers
 {
-    public static class IdentityUserEndpoints
+    public static class AIdentityUserEndpoints
     {
         public static IEndpointRouteBuilder MapIdentityUserEndpoint(this IEndpointRouteBuilder app)
         {
@@ -26,11 +26,16 @@ namespace AuthECApi.Controllers
         {
             AppUser user = new AppUser()
             {
-                UserName = userRegistrationModel.Email,
-                Email = userRegistrationModel.Email,
                 FullName = userRegistrationModel.FullName,
+                DOB = DateOnly.FromDateTime(DateTime.Now.AddYears(-userRegistrationModel.Age)),
+                Email = userRegistrationModel.Email,
+                UserName = userRegistrationModel.Email,
+                Gender = userRegistrationModel.Gender,
+                LibraryID = userRegistrationModel.LibraryID,
             };
             var result = await userManager.CreateAsync(user, userRegistrationModel.Password);
+
+            await userManager.AddToRoleAsync(user, userRegistrationModel.Role);
 
             if (result.Succeeded)
                 return Results.Ok(result);

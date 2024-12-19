@@ -2,6 +2,7 @@ using AuthECApi.Controllers;
 using AuthECApi.Extensions;
 using AuthECApi.Models;
 using AuthECAPI.Controllers;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -18,8 +19,16 @@ builder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
 
 var app = builder.Build();
 
-//RUNNING THE APP
+// Get services from DI container
+var scope = app.Services.CreateScope();
+var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+// Seed roles and users
+await DbInitializer.SeedRolesAsync(scope.ServiceProvider, roleManager);
+await DbInitializer.SeedUsersAsync(userManager, roleManager);
+
+//RUNNING THE APP
 app.ConfigureSwaggerExplorer()
     .ConfigureCors(config)
     .AddIdentityAuthMiddlware();

@@ -1,5 +1,4 @@
 ﻿using AuthECApi.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthECApi.Extensions;
