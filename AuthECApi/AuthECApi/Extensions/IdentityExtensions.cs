@@ -47,8 +47,8 @@ public static class IdentityExtensions
     }
     public static WebApplication AddIdentityAuthMiddlware(this WebApplication app)
     {
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
         return app;
     }
 }

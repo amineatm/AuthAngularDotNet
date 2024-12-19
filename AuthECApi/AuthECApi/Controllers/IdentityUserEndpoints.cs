@@ -44,7 +44,7 @@ namespace AuthECApi.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("UserID", user.Id.ToString())
+                        new Claim("userID", user.Id.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(10),
                     SigningCredentials = new SigningCredentials(
