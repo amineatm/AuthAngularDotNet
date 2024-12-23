@@ -98,10 +98,12 @@ public static class DbInitializer
                     FullName = user.FullName,
                     Gender = user.Gender,
                     DOB = DateOnly.FromDateTime(DateTime.Now.AddYears(-user.Age)),
-                    LibraryID = user.LibraryId,
                 };
 
-
+                //if (user.LibraryId is not null)
+                //{
+                //    newUser.LibraryID = user.LibraryId;
+                //}
 
                 var result = await userManager.CreateAsync(newUser, user.Password);
                 if (result.Succeeded)

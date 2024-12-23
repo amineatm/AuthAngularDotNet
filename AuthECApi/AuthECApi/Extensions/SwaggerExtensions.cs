@@ -18,6 +18,14 @@ public static class SwaggerExtensions
                 In = ParameterLocation.Header,
                 Description = "Fill in the JWT token",
             });
+            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                Name = "Api-Key",
+                Type = SecuritySchemeType.ApiKey,
+                In = ParameterLocation.Header,
+                Description = "Enter your API key",
+            });
+
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -32,6 +40,12 @@ public static class SwaggerExtensions
                         new List<String>()
                     }
                 });
+
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "AuthEC",
+                Version = "v1"
+            });
 
         });
         return services;

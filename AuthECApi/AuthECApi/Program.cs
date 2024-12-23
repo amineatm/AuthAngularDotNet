@@ -1,11 +1,13 @@
 using AuthECApi.Controllers;
 using AuthECApi.Extensions;
+using AuthECApi.Middlewares.Jobsmart.Application.Middlewares;
 using AuthECApi.Models;
 using AuthECAPI.Controllers;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
+
 builder.Services.AddControllers();
 
 builder.Services.AddSwaggerExplorer()
@@ -16,6 +18,8 @@ builder.Services.AddSwaggerExplorer()
                 .AddIdentityAuth(config);
 
 builder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
+
+builder.Services.AddSingleton<IApiKeyValidator, ApiKeyValidator>();
 
 var app = builder.Build();
 
@@ -33,7 +37,10 @@ app.ConfigureSwaggerExplorer()
     .ConfigureCors(config)
     .AddIdentityAuthMiddlware();
 
+app.UseMiddleware<ApiKeyMiddleware>();
+
 app.MapControllers();
+
 app.MapGroup("/api")
     .MapIdentityApi<AppUser>();
 app.MapGroup("/api")

@@ -19,22 +19,33 @@ namespace AuthECAPI.Controllers
         private static async Task<IResult> GetUserRoles(AppDbContext dbContext)
         {
             var roleList = await dbContext.Roles.Select(x => x.Name).ToListAsync();
+            if (roleList == null || !roleList.Any())
+                return Results.NotFound("No roles found.");
+
             return Results.Ok(roleList);
         }
 
         [Authorize]
         private static async Task<IResult> GetUserProfile(
-          ClaimsPrincipal user,
-          UserManager<AppUser> userManager)
+            ClaimsPrincipal user,
+            UserManager<AppUser> userManager)
         {
-            var userID = user.Claims.First(x => x.Type == "userID").Value;
+            // Ensure the claim name used is consistent with your token
+            var userID = user.Claims.FirstOrDefault(x => x.Type == "userID")?.Value;
+
+            if (userID == null)
+                return Results.Unauthorized();
+
             var userDetails = await userManager.FindByIdAsync(userID);
-            return Results.Ok(
-              new
-              {
-                  Email = userDetails?.Email,
-                  FullName = userDetails?.FullName,
-              });
+
+            if (userDetails == null)
+                return Results.NotFound("User not found.");
+
+            return Results.Ok(new
+            {
+                Email = userDetails.Email,
+                FullName = userDetails.FullName
+            });
         }
     }
 }
