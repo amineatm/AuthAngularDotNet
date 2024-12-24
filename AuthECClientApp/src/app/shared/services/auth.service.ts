@@ -9,10 +9,10 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   constructor(private http: HttpClient) {}
   createUser(formData: any) {
-    return this.http.post(environment.API_BASE_URL + 'signup', formData);
+    return this.http.post(environment.API_BASE_URL + 'AccountIdentity/signup', formData);
   }
   signin(formData: any) {
-    return this.http.post(environment.API_BASE_URL + 'signin', formData);
+    return this.http.post(environment.API_BASE_URL + 'AccountIdentity/signin', formData);
   }
   deleteToken() {
     localStorage.removeItem(TOKEN_KEY);
