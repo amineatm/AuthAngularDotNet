@@ -12,12 +12,12 @@ namespace AuthECApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class IdentityUserController : ControllerBase
+    public class AccountIdentityController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IOptions<AppSettings> _appSettings;
 
-        public IdentityUserController(UserManager<AppUser> userManager, IOptions<AppSettings> appSettings)
+        public AccountIdentityController(UserManager<AppUser> userManager, IOptions<AppSettings> appSettings)
         {
             _userManager = userManager;
             _appSettings = appSettings;
