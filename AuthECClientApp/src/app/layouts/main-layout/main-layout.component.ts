@@ -13,6 +13,7 @@ import { claimReq } from '../../shared/utils/claimReq-utils';
 export class MainLayoutComponent {
   constructor(private router: Router, private authService: AuthService) {}
   claimReq = claimReq;
+  
   onLogout() {
     this.authService.deleteToken();
     this.router.navigateByUrl('/login');
