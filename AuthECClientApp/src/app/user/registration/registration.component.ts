@@ -8,10 +8,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
-import { AuthService } from '../../shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../shared/services/user.service';
+import { BrowserService } from '../../shared/services/browser.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -23,13 +24,14 @@ export class RegistrationComponent implements OnInit {
   roles: string[] = [];
   constructor(
     public formBuilder: FormBuilder,
-    private service: AuthService,
+    public browserService: BrowserService,
+    public authService: AuthService,
     private toastr: ToastrService,
     private router: Router,
     private userService: UserService
   ) {}
   ngOnInit(): void {
-    if (this.service.isLoggedIn()) {
+    if (this.browserService.isLoggedIn()) {
       this.router.navigateByUrl('/dashboard');
     }
 
@@ -76,7 +78,7 @@ export class RegistrationComponent implements OnInit {
   onSubmit() {
     this.isSubmitted = true;
     if (this.form.valid) {
-      this.service.createUser(this.form.value).subscribe({
+      this.authService.createUser(this.form.value).subscribe({
         next: (res: any) => {
           if (res.succeeded) {
             this.form.reset();

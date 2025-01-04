@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { AuthService } from '../shared/services/auth.service';
+import { BrowserService } from '../shared/services/browser.service';
 
 @Directive({
   selector: '[appHideIfClaimsNotMet]',
@@ -8,11 +8,11 @@ import { AuthService } from '../shared/services/auth.service';
 export class HideIfClaimsNotMetDirective implements OnInit {
   @Input("appHideIfClaimsNotMet") claimReq!: Function;
 
-  constructor(private authService: AuthService,
+  constructor(private browserService: BrowserService,
     private elementRef: ElementRef) { }
 
   ngOnInit(): void {
-    const claims = this.authService.getClaims();
+    const claims = this.browserService.getClaims();
     
     if (!this.claimReq(claims))
       this.elementRef.nativeElement.style.display = "none";

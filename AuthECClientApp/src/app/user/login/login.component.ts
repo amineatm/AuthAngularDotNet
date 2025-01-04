@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { TOKEN_KEY } from '../../shared/constants';
+import { BrowserService } from '../../shared/services/browser.service';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +18,13 @@ export class LoginComponent implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     private authService: AuthService,
+    private browserService: BrowserService,
     private toastr: ToastrService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
+    if (this.browserService.isLoggedIn()) {
       this.router.navigateByUrl('/dashboard');
     }
   }
@@ -45,7 +47,7 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.authService.signin(this.form.value).subscribe({
         next: (res: any) => {
-          this.authService.saveToken(res.token);
+          this.browserService.saveToken(res.token);
           this.router.navigateByUrl('/dashboard');
         },
         error: (err) => {

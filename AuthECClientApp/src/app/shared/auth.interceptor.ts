@@ -5,9 +5,11 @@ import { ToastrService } from 'ngx-toastr';
 import { tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './services/auth.service';
+import { BrowserService } from './services/browser.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+  const browserService = inject(BrowserService);
   const router = inject(Router);
   const toastr = inject(ToastrService);
 
@@ -15,11 +17,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     headers: req.headers.set('Api-Key', environment.ANGULAR_APP_API_KEY),
   });
 
-  if (authService.isLoggedIn()) {
+  if (browserService.isLoggedIn()) {
     clonedReq = clonedReq.clone({
       headers: clonedReq.headers.set(
         'Authorization',
-        'Bearer ' + authService.getToken()
+        'Bearer ' + browserService.getToken()
       ),
     });
   }
@@ -28,7 +30,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     tap({
       error: (err: any) => {
         if (err.status == 401) {
-          authService.deleteToken();
+          browserService.deleteToken();
           setTimeout(() => {
             toastr.info('Please login again', 'Session Expired!');
           }, 1500);

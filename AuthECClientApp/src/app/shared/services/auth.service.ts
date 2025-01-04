@@ -14,22 +14,4 @@ export class AuthService {
   signin(formData: any) {
     return this.http.post(environment.API_BASE_URL + 'AccountIdentity/signin', formData);
   }
-  deleteToken() {
-    localStorage.removeItem(TOKEN_KEY);
-  }
-  saveToken(token: string) {
-    localStorage.setItem(TOKEN_KEY, token);
-  }
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem(TOKEN_KEY);
-  }
-  isLoggedIn() {
-    return this.getToken() != null ? true : false;
-  }
-  getToken() {
-    return localStorage.getItem(TOKEN_KEY);
-  }
-  getClaims() {
-    return JSON.parse(window.atob(this.getToken()!.split('.')[1]));
-  }
 }
