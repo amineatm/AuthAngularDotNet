@@ -41,12 +41,7 @@ app.UseMiddleware<ApiKeyMiddleware>();
 
 app.MapControllers();
 
-app.MapGroup("/api")
-    .MapIdentityApi<AppUser>();
-app.MapGroup("/api")
-    .MapIdentityUserEndpoint();
-app.MapGroup("/api")
-   .MapAccountEndpoints()
-   .MapAutorizationDemopoints();
+//app.MapGroup("/api")
+//    .MapIdentityApi<AppUser>();
 
 app.Run();
