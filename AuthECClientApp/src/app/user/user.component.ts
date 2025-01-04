@@ -29,10 +29,9 @@ import {
   ],
 })
 export class UserComponent {
-  constructor(private context: ChildrenOutletContexts) {}
+  constructor(private context: ChildrenOutletContexts) { }
 
   getRouterUrl() {
-    // console.log(this.context.getContext('primary')?.route?.url);
     return this.context.getContext('primary')?.route?.url;
   }
 }
